@@ -15,7 +15,7 @@ void setupUltrasonicPins(uint trigPin, uint echoPin)
     gpio_set_dir(echoPin, GPIO_IN);
 }
 
-uint64_t getPulse(uint trigPin, uint echoPin)
+float getPulse(uint trigPin, uint echoPin)
 {
     gpio_put(trigPin, 1);
     sleep_us(10);
@@ -36,14 +36,27 @@ uint64_t getPulse(uint trigPin, uint echoPin)
     return absolute_time_diff_us(startTime, endTime);
 }
 
-uint64_t getCm(uint trigPin, uint echoPin)
+uint64_t getCm_int(uint trigPin, uint echoPin)
 {
     uint64_t pulseLength = getPulse(trigPin, echoPin);
     return pulseLength / 29 / 2;
 }
 
-uint64_t getInch(uint trigPin, uint echoPin)
+uint64_t getInch_int(uint trigPin, uint echoPin)
 {
     uint64_t pulseLength = getPulse(trigPin, echoPin);
-    return (long)pulseLength / 74.f / 2.f;
+    return pulseLength / 74.f / 2.f;
 }
+
+float getCm_float(uint trigPin, uint echoPin)
+{
+    float pulseLength = getPulse(trigPin, echoPin);
+    return pulseLength / 29 / 2;
+}
+
+float getInch_float(uint trigPin, uint echoPin)
+{
+    float pulseLength = getPulse(trigPin, echoPin);
+    return pulseLength / 74.f / 2.f;
+}
+

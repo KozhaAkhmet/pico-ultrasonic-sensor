@@ -13,7 +13,7 @@ int main()
     stdio_init_all();
     setupUltrasonicPins(trigPin, echoPin);
     while (true) { 
-        printf("\n %d cm", getCm(trigPin, echoPin)); 
+        printf("\n %d cm", getCm_float(trigPin, echoPin)); 
         sleep_ms(100);
     }
 }
