@@ -3,6 +3,7 @@
 A library for Raspberry Pi Pico with filtering algorithms for the Ultrasonic Sensor(HC-S04).
 
 # Compilation
+**Required preinstalled Raspberry Pi Pico SDK.**
 
 Run the compile.sh script.
   Make it executable and run:
@@ -18,6 +19,7 @@ To compile from scratch, run the following commands:
     $ cmake .. # calling cmake
     $ make     # compile
 ```
+After compilation, simply flash desired .ulf2 file.
 # Visualization
 
 For plotting I suggest to use [serialplotter](https://github.com/hyOzd/serialplot/tree/master) which is written in Qt. Also, you can load preset(configurations) from the plotter_config file.
