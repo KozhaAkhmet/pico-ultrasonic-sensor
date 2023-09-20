@@ -4,7 +4,7 @@ add_executable(filter_test filter_test.cpp)
 target_link_libraries(filter_test 
 pico_stdlib
 hardware_uart 
-pico_ultrasonic
+pico_ultrasonic_object
 )
 
 pico_enable_stdio_usb(filter_test 1)
