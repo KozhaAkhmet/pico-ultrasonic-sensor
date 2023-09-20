@@ -20,6 +20,6 @@ To compile from scratch, run the following commands:
 ```
 # Visualization
 
-For plotting I suggest to use [serialplotter](https://github.com/hyOzd/serialplot/tree/master) which is written in Qt.
+For plotting I suggest to use [serialplotter](https://github.com/hyOzd/serialplot/tree/master) which is written in Qt. Also, you can load preset(configurations) from the plotter_config file.
 Example ScreenShot:
-![SerialPlotter SS](media/Screenshot%20from%202023-09-20%2015-09-41.png)
+![SerialPlotter SS](media/PlotterSS.png)
