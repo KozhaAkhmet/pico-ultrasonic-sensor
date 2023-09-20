@@ -1,17 +1,11 @@
-// This example uses the ultrasonic script to get centimeters and writes it to UART
 
 #include <stdio.h>
-
 #include "pico/stdlib.h"
-extern "C" {
-#include "ultrasonic.h"
-}
+#include "ultrasonicObject.h" 
 #include "hardware/uart.h"
 
-uint trigPin = 2;
-uint echoPin = 3;
-
-typedef int byte;
+uint trigPin = 21;
+uint echoPin = 20;
 
 float max(float a, float b){
     return a > b ? a : b;
@@ -20,17 +14,18 @@ float max(float a, float b){
 float min(float a, float b){
     return a > b ? b : a;
 }
-// медиана на 3 значения со своим буфером
-#define NUM_READ 3
+// medain filtering algorithm
+#define NUM_READ 10
 float median(float newVal) {
-  static float buffer[NUM_READ];  // статический буфер
-  size_t count = 0;    // счётчик
+  static float buffer[NUM_READ];  // static buffer
+  static size_t count = 0;    // counter
   buffer[count] = newVal;
   if (++count >= NUM_READ) count = 0;  // перемотка буфера
   
-  float buf[NUM_READ];    // локальный буфер для медианы
-  for (byte i = 0; i < NUM_READ; i++) buf[i] = buffer[i];  
-  for (int i = 0; i <= (int) ((NUM_READ / 2) + 1); i++) { // пузырьковая сортировка массива (можно использовать любую)
+  float buf[NUM_READ];    // buffer for median
+  for (int i = 0; i < NUM_READ; i++) buf[i] = buffer[i];  
+
+  for (int i = 0; i <= (int) ((NUM_READ / 2) + 1); i++) { // Sorting with the Buble sort.
     for (int m = 0; m < NUM_READ - i - 1; m++) {
       if (buf[m] > buf[m + 1]) {
         float buff = buf[m];
@@ -39,35 +34,29 @@ float median(float newVal) {
       }
     }
   }
+
   float ans = 0;
-  if (NUM_READ % 2 == 0) {             // кол-во элементов в массиве четное (NUM_READ - последний индекс массива)
-    ans = buf[(NUM_READ / 2)];   // берем центральное
+  if (NUM_READ % 2 == 0) {            
+    ans = buf[(NUM_READ / 2)];   // picking value in the center
   } else {
-    ans = (buf[(NUM_READ / 2)] + buf[((NUM_READ / 2)) + 1]) / 2; // берем среднее от двух центральных
+    ans = (buf[(NUM_READ / 2)] + buf[((NUM_READ / 2)) + 1]) / 2; // picking an avarage from two middle values
   }
   return ans;
 }
 
 int main() {
     stdio_init_all();
-    setupUltrasonicPins(trigPin, echoPin);
+    Ultrasonic ultrasonic(trigPin, echoPin);
     printf("initializing...");
-    float value = 0;
+    float raw_value = 0;
+    int raw_value_int = 0;
     while (true) {
-        value = getCm(trigPin, echoPin);
-        printf("%f\n", median(value));
-        sleep_ms(100);
+        raw_value = ultrasonic.getCM<float>();
+        raw_value_int = ultrasonic.getCM<int>();
+
+        printf("\n%f %f %d", raw_value, median(raw_value), raw_value_int);
+        // printf("\n%f",));
+        // printf("\n|");
+        sleep_ms(50);
     }
 }
-
-// int main() {
-//     stdio_init_all();
-//     setupUltrasonicPins(trigPin, echoPin);
-//     printf("initializing...");
-//     float value = 0;
-//     while (true) {
-        
-//         printf("\n %f cm", getCm(trigPin, echoPin));
-//         sleep_ms(100);
-//     }
-// }
